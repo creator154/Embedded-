@@ -1,0 +1,8 @@
+<!doctype html>
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Top 10 - {{test['name']}}</title><link rel="stylesheet" href="/static/style.css"></head>
+<body><main class="wrap"><a class="ghost" href="/admin">← Admin</a>
+<h1>🏆 Top 10</h1><p>{{test['name']}}</p>
+<section class="card tablewrap"><table><thead><tr><th>#</th><th>Student</th><th>Score</th><th>Correct</th><th>Wrong</th><th>Time</th></tr></thead>
+<tbody>{% for r in rows %}<tr><td>{{loop.index}}</td><td>{{r['student_name']}}</td><td>{{r['score'] if r['score'] is not none else '-'}}</td><td>{{r['correct'] if r['correct'] is not none else '-'}}</td><td>{{r['wrong'] if r['wrong'] is not none else '-'}}</td><td>{{r['time_taken'] if r['time_taken'] is not none else '-'}}s</td></tr>
+{% else %}<tr><td colspan="6">No results received yet.</td></tr>{% endfor %}</tbody></table></section></main></body></html>

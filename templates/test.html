@@ -1,0 +1,35 @@
+<!doctype html>
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{test['name']}}</title><link rel="stylesheet" href="/static/style.css"></head>
+<body class="player">
+<div class="topbar"><div><span class="eyebrow">LIVE TEST</span><b>{{test['name']}}</b></div></div>
+<div id="join" class="card join">
+<h1>Ready for the test?</h1><p>Enter your name to continue.</p>
+<input id="student" placeholder="Your name" autocomplete="name">
+<button onclick="startTest()">START TEST</button>
+</div>
+<div id="frameWrap" class="frameWrap hidden">
+<iframe id="quiz" title="Live Test" allow="fullscreen; autoplay" referrerpolicy="no-referrer"
+src="{{test['test_url']}}"></iframe>
+</div>
+<script>
+const slug={{ test['slug']|tojson }};
+let startedAt=null;
+function startTest(){
+  const n=document.getElementById('student').value.trim();
+  if(!n){alert('Please enter your name');return;}
+  localStorage.setItem('live_test_name_'+slug,n);
+  startedAt=Date.now();
+  document.getElementById('join').classList.add('hidden');
+  document.getElementById('frameWrap').classList.remove('hidden');
+}
+window.addEventListener('message', async (e)=>{
+  // If the embedded quiz sends a result via postMessage, this wrapper stores it.
+  if(!e.data || e.data.type!=='QUIZ_RESULT') return;
+  const n=localStorage.getItem('live_test_name_'+slug)||'Unknown';
+  await fetch('/api/results',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({slug:slug,student_name:n,score:e.data.score,
+      correct:e.data.correct,wrong:e.data.wrong,
+      time_taken:startedAt?Math.round((Date.now()-startedAt)/1000):null})});
+});
+</script></body></html>
