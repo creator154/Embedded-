@@ -1,0 +1,18 @@
+<!doctype html>
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin</title><link rel="stylesheet" href="/static/style.css"></head>
+<body><main class="wrap">
+<header><div><div class="eyebrow">LIVE TEST</div><h1>Admin Panel</h1></div><a class="ghost" href="/logout">Logout</a></header>
+<section class="card"><h2>Create Public Test</h2>
+<form method="post" action="/admin/create" class="form">
+<input name="name" placeholder="Test name" required>
+<input name="test_url" placeholder="Quizard test URL" required>
+<button>CREATE PUBLIC LINK</button></form></section>
+<section><h2>Your Tests</h2>
+{% for t in tests %}
+<div class="testrow"><div><b>{{t['name']}}</b><small>{{t['test_url']}}</small>
+<code>/test/{{t['slug']}}</code></div>
+<div class="actions"><a class="btn" target="_blank" href="/test/{{t['slug']}}">OPEN</a>
+<a class="btn" href="/admin/results/{{t['slug']}}">TOP 10</a></div></div>
+{% else %}<div class="card">No tests yet.</div>{% endfor %}
+</section></main></body></html>
